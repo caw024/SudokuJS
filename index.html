@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Sudoku</title>
+        <!-- import bootstrap -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+        <!-- import our own stylesheet -->
+        <link rel="stylesheet" href="styles.css"/>
+        <script src="Sudoku.js"></script>	
+    </head>
+
+    <body>
+        <h1>Include Sudoku Puzzle here</h1>
+        <div id = "temp">
+            Description of Algorithms
+        </div>
+        <div class="container">
+
+            <!--
+                 we have 1 row that contains 2 columns
+                 one for the thumbnails and one for the
+                 main reader view
+            -->
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn btn-default js-go-day">DAY NODE</button>
+                    <button class="btn btn-default js-go-night">NIGHT NODE</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <!--
+                        This is a list view that will
+                        contain all the chapter thumbnails
+                    -->
+                    <ul class="list-group scrollable" id="chapterlist">
+                        <!--
+                            The id contains the chapter number, something
+                            we will use in the JS code
+                            The class list-group-item is for bootstrap
+                            and chapter-thumbnail is for our code
+                        -->
+                        <li id="chapter0"
+                           class="list-group-item chapter-thumbnail ">Hamlet
+    By William Shakespeare
+                        </li>
+                        <li id="chapter1" class="list-group-item chapter-thumbnail  ">ACT I
+    SCENE I.
+    Elsinore. A platform before the castle.
+    
+                        </li>
+                        <li id="chapter2" class="list-group-item chapter-thumbnail">SCENE II.
+    A room of state in the castle.
+                        </li>
+                        <li id="chapter3" class="list-group-item chapter-thumbnail">SCENE III.
+    A room in Polonius' house.
+
+                        </li>
+                        
+                      </ul>
+                  </div>
+    
+                  <!--
+                    This contains the main reader view
+                    that will show the whole chapter.
+                    It is currently empty because we will
+                    fill in using JavaScript
+                  -->
+                <div class="col-md-9">
+                    <!--
+                        well is a bootstrap class for creating
+                        a nice container box
+                        The id, mainViewer is for our use
+                    -->
+                    <div class="well" id="mainViewer" >
+                    </div>
+                </div>
+    
+            </div>
+    
+        </div>
+    </body>
+
+</html>
