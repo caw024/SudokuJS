@@ -9,17 +9,15 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             let vals = data["squares"];
             // return as json data of the form ( {x: , y:, value: } )
-            // note this is ajax (asynchronous), so you must set it to document.innerhyml
-            var puzzle = [];
-            for (var i = 0; i < 9; i++){
-                let row = []
-                for (var j = 0; j < 9; j++){
-                    row.push('_');
-                }
-                puzzle.push(row)
-            }
-            vals.forEach(l => puzzle[l['x']][l['y']] = l['value']);
-            return puzzle;
+            // note this is ajax (asynchronous), so you must set it to document.innerhtml
+            
+            console.log('a')
+            vals.forEach(l => {
+                var num = (l['x'])+9*(l['y']);
+                document.getElementById( num ).value = l['value'];
+                document.getElementById( num ).setAttribute("disabled", "");
+
+            });
         })
         .catch(error => {
             console.log('Error:', error);
@@ -130,9 +128,10 @@ document.addEventListener('DOMContentLoaded', function() {
         return poss;
     }
 
-    var puzzle = getPuzzle();
-    var ans = solveSudoku(puzzle,0);
-    alert(ans);
+    getPuzzle();
+    console.log(1);
+    //var ans = solveSudoku(puzzle,0);
+    //alert(ans);
     //alert(puzzle[0]);
 
     /*
