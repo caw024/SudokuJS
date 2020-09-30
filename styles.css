@@ -6,3 +6,18 @@ h1{
     background:black;
     color:white;
 }
+
+.grid{
+    border: 2px solid black;
+}
+
+td{
+    border: 1px solid black;
+}
+
+input{
+    font-size: 40px;
+    text-align: center;
+    line-height: 60px;
+    width: 60px;
+}
