@@ -39,17 +39,18 @@
 
 // solves sudoku puzzle
 function solvePuzzle(){
-    arr = [];
+    var arr = [];
     for (var i = 0; i < 9; i++){
         temp = [];
         for (var j = 0; j < 9; j++){
             var item = j + 9*i;
-            var val = document.getElementById(item).value;
-            if (val === ""){
-                temp.push("_");
+            var val = document.getElementById(item);
+
+            if (val.hasAttribute('disabled')){
+                temp.push(parseInt(val.value));
             }
             else{
-                temp.push(parseInt(val));
+                temp.push("_");
             }
         }
         arr.push(temp);
@@ -183,7 +184,22 @@ var arr = [[6,9,4,1,8,3,5,2,7],
         [9,6,5,3,4,7,1,8,2]]
 */
 
+
+function isValid(t){
+    var arr = new Array(1,2,3,4,5,6,7,8,9);
+    return arr.includes(t) ? true : false;
+}
+
+// Upon loading DOM
 document.addEventListener("DOMContentLoaded", function(){
+
+    /*
+    document.querySelector("input").addEventListener("input", function(){
+        if (! isValid(this.value)){
+            console.log(this.value);
+        }
+    });
+    */
     getPuzzle();
     document.getElementById("New").addEventListener('click', getPuzzle );
     document.getElementById("Solve").addEventListener('click', solvePuzzle );
