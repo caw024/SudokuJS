@@ -186,21 +186,24 @@ var arr = [[6,9,4,1,8,3,5,2,7],
 
 
 function isValid(t){
-    var arr = new Array(1,2,3,4,5,6,7,8,9);
+    var arr = new Array("1","2","3","4","5","6","7","8","9");
     return arr.includes(t) ? true : false;
 }
 
 // Upon loading DOM
 document.addEventListener("DOMContentLoaded", function(){
-
-    /*
-    document.querySelector("input").addEventListener("input", function(){
-        if (! isValid(this.value)){
-            console.log(this.value);
-        }
-    });
-    */
     getPuzzle();
     document.getElementById("New").addEventListener('click', getPuzzle );
     document.getElementById("Solve").addEventListener('click', solvePuzzle );
+
+    
+    document.querySelectorAll(".cell").forEach( cell => {
+        console.log(cell);
+        cell.addEventListener("input", () => {
+            console.log(cell.value)
+            if (isValid(cell.value) === false){
+                cell.value = "";
+            }
+        });
+    });
 });
