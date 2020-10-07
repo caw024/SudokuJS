@@ -7,6 +7,19 @@ h1{
     color:white;
 }
 
+#timer{
+    text-align: center;
+    font-size: 25px;
+}
+
+#row0, #row3, #row6{
+    border-top: 4px solid black;
+}
+
+#row8{
+    border-bottom: 4px solid black;
+}
+
 .grid{
     margin-left: auto;
     margin-right: auto;
