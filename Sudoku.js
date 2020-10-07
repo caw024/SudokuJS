@@ -3,6 +3,7 @@
  function getPuzzle() {
     document.getElementById("Solve").disabled=true;
     document.getElementById("New").disabled=true;
+    document.getElementById("timer").innerHTML = "";
 
     for (var i = 0; i < 9; i++){
         for (var j = 0; j < 9; j++){
@@ -29,6 +30,7 @@
         });
         document.getElementById("Solve").disabled = false;
         document.getElementById("New").disabled = false;
+        document.getElementById("timer").innerHTML = "00:00";
     })
     .catch(error => {
         console.log('Error:', error);
@@ -185,25 +187,65 @@ var arr = [[6,9,4,1,8,3,5,2,7],
 */
 
 
+// returns if input is valid
 function isValid(t){
     var arr = new Array("1","2","3","4","5","6","7","8","9");
     return arr.includes(t) ? true : false;
 }
 
-// Upon loading DOM
-document.addEventListener("DOMContentLoaded", function(){
-    getPuzzle();
-    document.getElementById("New").addEventListener('click', getPuzzle );
-    document.getElementById("Solve").addEventListener('click', solvePuzzle );
+function validateInput(cell){
+    //console.log(cell);
+    cell.addEventListener("input", () => {
+    //console.log(cell.value)
+    if (isValid(cell.value) === false){
+        cell.value = "";
+    }
+});
+}
 
-    
+// preshades columns of border
+function borderShade(){
     document.querySelectorAll(".cell").forEach( cell => {
         console.log(cell);
-        cell.addEventListener("input", () => {
-            console.log(cell.value)
-            if (isValid(cell.value) === false){
-                cell.value = "";
-            }
-        });
+        if (cell.id % 3 == 0){
+            cell.style['border'] = "none";
+            cell.style['border-left'] = "4px solid black";
+        }
+        else if (cell.id % 9 == 8){
+            cell.style['border'] = "none";
+            cell.style['border-right'] = "4px solid black";
+        }
     });
+}
+
+function timer(){
+    const t = document.querySelector('#timer');
+    var temp = t.innerHTML.split(':');
+
+    if (temp[1] === '59'){
+        temp[0] = (parseInt(temp[0])+1).toString();
+        if (temp[0].length === 1){
+            temp[0] = "0" + temp[0];
+        }
+        temp[1] = "00";
+    }
+    else{
+        temp[1] = (parseInt(temp[1])+1).toString();
+        if (temp[1].length === 1){
+            temp[1] = "0" + temp[1];
+        }
+    }
+    //console.log(temp);
+    t.innerHTML = temp[0] + ":" + temp[1];
+    
+}
+
+// Upon loading DOM
+document.addEventListener("DOMContentLoaded", function(){
+    borderShade();
+    getPuzzle();
+    setInterval(timer,1000);
+    document.getElementById("New").addEventListener('click', getPuzzle );
+    document.getElementById("Solve").addEventListener('click', solvePuzzle );  
+    document.querySelectorAll(".cell").forEach( cell => validateInput(cell));
 });
