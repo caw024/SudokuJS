@@ -1,3 +1,3 @@
 # SudokuJS
 
-Play it at caw024.github.com/SudokuJS!
+Play it at https://caw024.github.io/SudokuJS/
