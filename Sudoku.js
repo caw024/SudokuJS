@@ -1,9 +1,9 @@
-
- // get all the prefilled squares of randomly generated sudoku puzzle
- function getPuzzle() {
+// get all the prefilled squares of randomly generated sudoku puzzle
+function getPuzzle() {
     document.getElementById("Solve").disabled=true;
     document.getElementById("New").disabled=true;
     document.getElementById("timer").innerHTML = "";
+    solved = false;
 
     for (var i = 0; i < 9; i++){
         for (var j = 0; j < 9; j++){
@@ -28,6 +28,7 @@
             document.getElementById( num ).value = l['value'];
             document.getElementById( num ).setAttribute("disabled", "");
         });
+        // reset puzzle features
         document.getElementById("Solve").disabled = false;
         document.getElementById("New").disabled = false;
         document.getElementById("timer").innerHTML = "00:00";
@@ -59,6 +60,8 @@ function solvePuzzle(){
     }
     
     solveSudokuHelper(arr, 0);
+    solved = true;
+    console.log(solved);
 }
 
 
@@ -219,6 +222,9 @@ function borderShade(){
 }
 
 function timer(){
+    if (solved){
+        return;
+    }
     const t = document.querySelector('#timer');
     var temp = t.innerHTML.split(':');
 
@@ -237,14 +243,15 @@ function timer(){
     }
     //console.log(temp);
     t.innerHTML = temp[0] + ":" + temp[1];
-    
 }
 
+var solved = false;
 // Upon loading DOM
 document.addEventListener("DOMContentLoaded", function(){
     borderShade();
     getPuzzle();
     setInterval(timer,1000);
+    
     document.getElementById("New").addEventListener('click', getPuzzle );
     document.getElementById("Solve").addEventListener('click', solvePuzzle );  
     document.querySelectorAll(".cell").forEach( cell => validateInput(cell));

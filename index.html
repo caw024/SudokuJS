@@ -7,17 +7,75 @@
         
         <!-- import our own stylesheet -->
         <link rel="stylesheet" href="styles.css"/>
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
         <script src="Sudoku.js"></script>	
     </head>
 
     <body>
         <h1>Calvin's Sudoku Solver</h1>
+
         <div id = "temp">
             Solves Sudoku using Recursive Backtracking
         </div>
-        <div id = "timer">
-            
-        </div>
+        <div id = "timer"></div>
+
+        <!--
+        <script type="text/babel">
+        class Timer extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    curtime: "00:00",
+                    solved: false
+                };
+            }
+
+            componentDidMount() {
+                this.timerID = setInterval(
+                    () => this.tick(),
+                    1000
+                );
+            }
+
+            componentWillUnmount() {
+                clearInterval(this.timerID);
+            }
+
+            tick() {
+                const t = this.state.curtime;
+                var temp = t.split(':');
+
+                if (temp[1] === '59'){
+                    temp[0] = (parseInt(temp[0])+1).toString();
+                    if (temp[0].length === 1){
+                        temp[0] = "0" + temp[0];
+                    }
+                    temp[1] = "00";
+                }
+                else{
+                    temp[1] = (parseInt(temp[1])+1).toString();
+                    if (temp[1].length === 1){
+                        temp[1] = "0" + temp[1];
+                    }
+                }
+                this.setState({ curtime : temp[0] + ":" + temp[1] });
+                //console.log(this.state.curtime);
+            } 
+
+            render() { 
+                return (
+                    <div>
+                        {this.state.curtime}
+                    </div>
+                );
+            }
+        }
+        ReactDOM.render(<Timer />, document.getElementById("timer"));
+        </script>
+        -->
+    
         <table class="grid">
             <tr id="row0">
                 <td> <input id="0" class="cell" type="text" maxlength="1" value=""> </td>
