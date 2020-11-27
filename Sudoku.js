@@ -276,6 +276,9 @@ function validateInput(cell){
 function activateHint(cell){
     const hint = document.getElementById("Hint");
     cell.addEventListener('focus', () => {
+        if (cell.disabled){
+            return;
+        }
         hint.disabled = false;
         hint.addEventListener("click", () => {
             let x = Math.floor(cell.id/9);
