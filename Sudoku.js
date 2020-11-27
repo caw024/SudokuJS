@@ -1,21 +1,42 @@
-// get all the prefilled squares of randomly generated sudoku puzzle
-function getPuzzle() {
+// set up board before puzzle loads
+function beforePuzzleLoads(){
+    if (typeof interval !== 'undefined') {
+        clearInterval(interval);
+    }
+    document.getElementById("Hint").disabled=true;
     document.getElementById("Solve").disabled=true;
     document.getElementById("New").disabled=true;
-    document.getElementById("timer").innerHTML = "";
+    document.getElementById("timer").innerHTML = "Loading...";
+    document.getElementById("congrats").innerHTML = null;
     solved = false;
+}
+
+// set up board after puzzle loads
+function afterPuzzleLoads(){
+    solveSudokuHelper(getBoard(), 0);
+    console.log(solution);
+    document.getElementById("Solve").disabled = false;
+    document.getElementById("New").disabled = false;
+    document.getElementById("timer").innerHTML = "00:00";
+    interval = setInterval(timer,1000);
+}
+
+// get all the prefilled squares of randomly generated sudoku puzzle
+function getPuzzle() {
+    beforePuzzleLoads();
 
     for (var i = 0; i < 9; i++){
         for (var j = 0; j < 9; j++){
-            var item = i + 9*j;
+            var item = j + 9*i;
             var cell = document.getElementById(item);
+            cell.style.color = "black";
             cell.value = "";
             cell.removeAttribute("disabled");
         }
     }
 
     const proxyurl = "https://cors-anywhere.herokuapp.com/";
-    const url = "http://www.cs.utep.edu/cheon/ws/sudoku/new/?size=9&?level=3";
+    const url = "http://www.cs.utep.edu/cheon/ws/sudoku/new/?size=9&?level=1";
     fetch(proxyurl + url)
     .then(response => response.json())
     .then(data => {
@@ -27,11 +48,10 @@ function getPuzzle() {
             var num = (l['x'])+9*(l['y']);
             document.getElementById( num ).value = l['value'];
             document.getElementById( num ).setAttribute("disabled", "");
+            document.getElementById( num ).style.color = "blue";
         });
         // reset puzzle features
-        document.getElementById("Solve").disabled = false;
-        document.getElementById("New").disabled = false;
-        document.getElementById("timer").innerHTML = "00:00";
+        afterPuzzleLoads();
     })
     .catch(error => {
         console.log('Error:', error);
@@ -40,8 +60,8 @@ function getPuzzle() {
     return false;
 }
 
-// solves sudoku puzzle
-function solvePuzzle(){
+// gets board
+function getBoard(){
     var arr = [];
     for (var i = 0; i < 9; i++){
         temp = [];
@@ -58,10 +78,22 @@ function solvePuzzle(){
         }
         arr.push(temp);
     }
-    
-    solveSudokuHelper(arr, 0);
-    solved = true;
-    console.log(solved);
+    return arr;
+}
+
+// outputs puzzle to html
+function puzzleToHtml(){
+    console.log(solution);
+    for (var i = 0; i < 9; i++){
+        for (var j = 0; j < 9; j++){
+            var item = j + 9*i;
+            var cell = document.getElementById(item);
+            cell.value = solution[i][j];
+            cell.setAttribute("disabled", "");
+        }
+    }
+    document.getElementById("Solve").disabled=true;
+    solve = true;
 }
 
 
@@ -69,15 +101,8 @@ function solvePuzzle(){
 function solveSudokuHelper(arr,ctr){
     // puzzle is solved
     if (ctr == 81){
-        for (var i = 0; i < 9; i++){
-            for (var j = 0; j < 9; j++){
-                var item = j + 9*i;
-                var cell = document.getElementById(item);
-                cell.value = arr[i][j];
-                cell.setAttribute("disabled", "");
-            }
-        }
-        return arr;
+        solution = arr;
+        return true;
     }
 
     // what numbers to track
@@ -174,9 +199,8 @@ function validNumbers(arr,x,y){
 }
 
 //var ans = solveSudoku(puzzle,0);
-    //alert(ans);
-    //alert(puzzle[0]);
-
+//alert(ans);
+//alert(puzzle[0]);
 /*
 var arr = [[6,9,4,1,8,3,5,2,7],
         [2,1,3,7,9,5,4,6,8],
@@ -189,27 +213,10 @@ var arr = [[6,9,4,1,8,3,5,2,7],
         [9,6,5,3,4,7,1,8,2]]
 */
 
-
-// returns if input is valid
-function isValid(t){
-    var arr = new Array("1","2","3","4","5","6","7","8","9");
-    return arr.includes(t) ? true : false;
-}
-
-function validateInput(cell){
-    //console.log(cell);
-    cell.addEventListener("input", () => {
-    //console.log(cell.value)
-    if (isValid(cell.value) === false){
-        cell.value = "";
-    }
-});
-}
-
 // preshades columns of border
 function borderShade(){
     document.querySelectorAll(".cell").forEach( cell => {
-        console.log(cell);
+        //console.log(cell);
         if (cell.id % 3 == 0){
             cell.style['border'] = "none";
             cell.style['border-left'] = "4px solid black";
@@ -223,6 +230,10 @@ function borderShade(){
 
 function timer(){
     if (solved){
+        if (typeof interval !== 'undefined') {
+            //console.log(interval);
+            clearInterval(interval);
+        }
         return;
     }
     const t = document.querySelector('#timer');
@@ -241,18 +252,84 @@ function timer(){
             temp[1] = "0" + temp[1];
         }
     }
-    //console.log(temp);
+    // console.log(temp);
     t.innerHTML = temp[0] + ":" + temp[1];
 }
 
-var solved = false;
+// returns if input is valid
+function isValid(t){
+    var arr = new Array("1","2","3","4","5","6","7","8","9");
+    return arr.includes(t) ? true : false;
+}
+
+// validate the input of cell
+function validateInput(cell){
+    //console.log(cell);
+    cell.addEventListener("input", () => {
+        if (isValid(cell.value) === false){
+            cell.value = "";
+        }
+    });
+}
+
+// activate the hint button
+function activateHint(cell){
+    const hint = document.getElementById("Hint");
+    cell.addEventListener('focus', () => {
+        hint.disabled = false;
+        hint.addEventListener("click", () => {
+            let x = Math.floor(cell.id/9);
+            let y = cell.id % 9;
+            cell.value = solution[x][y];
+            cell.style.color = "#066309";
+            cell.setAttribute('disabled', '');
+        });
+    });
+    cell.addEventListener('blur', () => {
+        setTimeout( () => {hint.disabled = true;}, 100);
+    })
+}
+
+// check if puzzle is solved
+function checkSolved(cell){
+    cell.addEventListener('keydown', () => {
+        /*
+        for (var i = 0; i < 9; i++){
+            for (var j = 0; j < 9; j++){
+                var item = j + 9*i;
+                var val = parseInt(document.getElementById(item).value);
+                if (val != solution[i][j]){
+                    console.log(i,j,val, solution[i][j]);
+                    return false;
+                }
+            }
+        }
+        
+       for (var i = 0; i < 9; i++){
+            for (var j = 0; j < 9; j++){
+                var item = j + 9*i;
+                document.getElementById(item).disabled = true;
+            }
+        }
+        document.getElementById("congrats").innerHTML = "Congrats on Solving the Puzzle!";
+        document.getElementById("Solve").disabled=true;
+        document.getElementById("Hint").disabled=true;
+
+        solved = true;
+        return true;
+        */
+    });
+}
+
+
 // Upon loading DOM
 document.addEventListener("DOMContentLoaded", function(){
     borderShade();
     getPuzzle();
-    setInterval(timer,1000);
-    
+
     document.getElementById("New").addEventListener('click', getPuzzle );
-    document.getElementById("Solve").addEventListener('click', solvePuzzle );  
+    document.getElementById("Solve").addEventListener('click', puzzleToHtml );
+    document.querySelectorAll(".cell").forEach( cell => activateHint(cell) );
+    document.querySelectorAll(".cell").forEach( cell => checkSolved(cell) );
     document.querySelectorAll(".cell").forEach( cell => validateInput(cell));
 });
