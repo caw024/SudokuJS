@@ -7,6 +7,12 @@ h1{
     color:white;
 }
 
+#congrats{
+    text-align: center;
+    font-size: 50px;
+    color: green;
+}
+
 #timer{
     text-align: center;
     font-size: 25px;
@@ -29,9 +35,10 @@ h1{
     border: 1px solid black;
 }
 
-input{
+.cell{
     font-size: 40px;
     text-align: center;
     line-height: 60px;
     width: 60px;
+    background-color: #e4f2c7;
 }
