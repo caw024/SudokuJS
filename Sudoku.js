@@ -3,6 +3,7 @@ function beforePuzzleLoads(){
     if (typeof interval !== 'undefined') {
         clearInterval(interval);
     }
+    //document.getElementById("Hint").removeAttribute('checked');
     document.getElementById("Hint").disabled=true;
     document.getElementById("Solve").disabled=true;
     document.getElementById("New").disabled=true;
@@ -18,6 +19,7 @@ function afterPuzzleLoads(){
     document.getElementById("Solve").disabled = false;
     document.getElementById("New").disabled = false;
     document.getElementById("timer").innerHTML = "00:00";
+    document.getElementById("Hint").disabled=false;
     interval = setInterval(timer,1000);
 }
 
@@ -36,7 +38,7 @@ function getPuzzle() {
     }
 
     const proxyurl = "https://cors-anywhere.herokuapp.com/";
-    const url = "http://www.cs.utep.edu/cheon/ws/sudoku/new/?size=9&?level=1";
+    const url = "http://www.cs.utep.edu/cheon/ws/sudoku/new/?size=9&?level=3";
     fetch(proxyurl + url)
     .then(response => response.json())
     .then(data => {
@@ -81,7 +83,6 @@ function getBoard(){
     return arr;
 }
 
-// outputs puzzle to html
 function puzzleToHtml(){
     console.log(solution);
     for (var i = 0; i < 9; i++){
@@ -93,7 +94,7 @@ function puzzleToHtml(){
         }
     }
     document.getElementById("Solve").disabled=true;
-    solve = true;
+    solved = true;
 }
 
 
@@ -231,11 +232,11 @@ function borderShade(){
 function timer(){
     if (solved){
         if (typeof interval !== 'undefined') {
-            //console.log(interval);
             clearInterval(interval);
         }
         return;
     }
+
     const t = document.querySelector('#timer');
     var temp = t.innerHTML.split(':');
 
@@ -272,31 +273,52 @@ function validateInput(cell){
     });
 }
 
+
 // activate the hint button
-function activateHint(cell){
+function activateHint(){
     const hint = document.getElementById("Hint");
-    cell.addEventListener('focus', () => {
-        if (cell.disabled){
-            return;
+    all_cells = document.querySelectorAll(".cell");
+    //console.log('checked attribute b4', hint.hasAttribute('checked'));
+
+    function assignHint(){ 
+        let x = Math.floor(this.id/9);
+        let y = this.id % 9;
+        // console.log(this,solution[x][y],x,y);
+        this.value = solution[x][y];
+        this.style.color = "#066309";
+        this.setAttribute('disabled', '');
+    }
+
+    //console.log("all cells", all_cells);
+    console.log(hint.hasAttribute('checked'));
+
+    // if hint mode is initially on, turn it off
+    if (hint.hasAttribute('checked')){
+        for (var i = 0; i < all_cells.length; i++){
+            all_cells[i].onfocus = "";
         }
-        hint.disabled = false;
-        hint.addEventListener("click", () => {
-            let x = Math.floor(cell.id/9);
-            let y = cell.id % 9;
-            cell.value = solution[x][y];
-            cell.style.color = "#066309";
-            cell.setAttribute('disabled', '');
-        });
-    });
-    cell.addEventListener('blur', () => {
-        setTimeout( () => {hint.disabled = true;}, 100);
-    })
+        
+        hint.removeAttribute('checked');
+        return;
+        // console.log('after removing checked attribute', hint.hasAttribute('checked'));
+        // console.log("all cells after removing event listeners", all_cells);
+    }
+
+    // if hint mode is initally off, turn it on
+    hint.setAttribute('checked', '');;
+    // console.log('after adding checked attribute', hint.hasAttribute('checked'));
+    for (var i = 0; i < all_cells.length; i++){
+        all_cells[i].onfocus = assignHint;
+    }
+    // console.log("all cells after adding event listeners", all_cells);
+    // debugger;
 }
 
 // check if puzzle is solved
 function checkSolved(cell){
-    cell.addEventListener('keydown', () => {
-        /*
+    cell.addEventListener('input', () => {
+        console.log('wow');
+        // check if all numbers match solution
         for (var i = 0; i < 9; i++){
             for (var j = 0; j < 9; j++){
                 var item = j + 9*i;
@@ -308,6 +330,7 @@ function checkSolved(cell){
             }
         }
         
+    // matches solution; good job!
        for (var i = 0; i < 9; i++){
             for (var j = 0; j < 9; j++){
                 var item = j + 9*i;
@@ -320,10 +343,10 @@ function checkSolved(cell){
 
         solved = true;
         return true;
-        */
     });
 }
 
+var solution;
 
 // Upon loading DOM
 document.addEventListener("DOMContentLoaded", function(){
@@ -332,7 +355,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
     document.getElementById("New").addEventListener('click', getPuzzle );
     document.getElementById("Solve").addEventListener('click', puzzleToHtml );
-    document.querySelectorAll(".cell").forEach( cell => activateHint(cell) );
+    document.getElementById("Hint").addEventListener('click', activateHint );
     document.querySelectorAll(".cell").forEach( cell => checkSolved(cell) );
     document.querySelectorAll(".cell").forEach( cell => validateInput(cell));
 });
