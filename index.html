@@ -179,9 +179,17 @@
             </tr>
         </table>
 
-        <div class="text-center">
-            <button id="Hint"> Hint </button>       
-            <button id="New"> New puzzle </button>       
+        <div class="text-center" style="padding:5px;">
+            <!-- Rectangular switch -->
+            <span id="toggled">
+                <label class="switch">
+                    <input type="checkbox" id="Hint">
+                    <span class="slider"">
+                    </span>
+                </label>
+                Hint
+            </span>
+            <button id="New" style="margin:5px;"> New puzzle </button>       
             <button id="Solve"> Solve puzzle </button>
         </div>
         
