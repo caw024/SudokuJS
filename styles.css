@@ -36,6 +36,7 @@ h1{
 }
 
 .cell{
+    border: 1px;
     font-size: 40px;
     text-align: center;
     line-height: 60px;
