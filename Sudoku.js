@@ -287,6 +287,9 @@ function activateHint(){
         this.value = solution[x][y];
         this.style.color = "#066309";
         this.setAttribute('disabled', '');
+        if (isValidSolution()){
+            solved = true;
+        }
     }
 
     //console.log("all cells", all_cells);
@@ -314,35 +317,38 @@ function activateHint(){
     // debugger;
 }
 
+function isValidSolution(){
+    for (var i = 0; i < 9; i++){
+        for (var j = 0; j < 9; j++){
+            var item = j + 9*i;
+            var val = parseInt(document.getElementById(item).value);
+            if (val != solution[i][j]){
+                // console.log(i,j,val, solution[i][j]);
+                return false;
+            }
+        }
+    }
+    
+    // matches solution; good job!
+   for (var i = 0; i < 9; i++){
+        for (var j = 0; j < 9; j++){
+            var item = j + 9*i;
+            document.getElementById(item).disabled = true;
+        }
+    }
+    document.getElementById("Solve").disabled=true;
+    // document.getElementById("Hint").disabled=true;
+    solved = true;
+    return true;
+}
+
 // check if puzzle is solved
 function checkSolved(cell){
     cell.addEventListener('input', () => {
-        console.log('wow');
         // check if all numbers match solution
-        for (var i = 0; i < 9; i++){
-            for (var j = 0; j < 9; j++){
-                var item = j + 9*i;
-                var val = parseInt(document.getElementById(item).value);
-                if (val != solution[i][j]){
-                    console.log(i,j,val, solution[i][j]);
-                    return false;
-                }
-            }
+        if (isValidSolution()){
+            document.getElementById("congrats").innerHTML = "Congrats on Solving the Puzzle!";
         }
-        
-    // matches solution; good job!
-       for (var i = 0; i < 9; i++){
-            for (var j = 0; j < 9; j++){
-                var item = j + 9*i;
-                document.getElementById(item).disabled = true;
-            }
-        }
-        document.getElementById("congrats").innerHTML = "Congrats on Solving the Puzzle!";
-        document.getElementById("Solve").disabled=true;
-        document.getElementById("Hint").disabled=true;
-
-        solved = true;
-        return true;
     });
 }
 
