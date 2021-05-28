@@ -42,6 +42,7 @@ function getPuzzle() {
     fetch(proxyurl + url)
     .then(response => response.json())
     .then(data => {
+        console.log(data);
         let vals = data["squares"];
         // return as json data of the form ( {x: , y:, value: } )
         // note this is ajax (asynchronous), so you must set it to document.innerhtml
